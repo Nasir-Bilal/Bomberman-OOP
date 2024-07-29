@@ -8,6 +8,7 @@
 
 using namespace sf;
 int CHANGE = 2;
+//hero
 
 class Hero : public Entity {
 private:

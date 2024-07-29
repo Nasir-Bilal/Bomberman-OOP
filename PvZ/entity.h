@@ -20,10 +20,17 @@ struct Position
         this->x += x;
         this->y += y;
         centerX += x+26;
-    
         centerY +=y + 26;
 
     }
+    void assignPosition(int x, int y)
+    {
+        this->x = x;
+        this->y = y;
+        
+
+    }
+
 };
 
 class Entity
@@ -39,6 +46,8 @@ public:
         :pos(x,y),isPresent(0){}
 
    virtual void draw(RenderWindow& window)  = 0;
+
+
   
 
 };

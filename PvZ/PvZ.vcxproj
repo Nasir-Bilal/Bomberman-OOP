@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="gameGrid.h" />
     <ClInclude Include="Explodable.h" />

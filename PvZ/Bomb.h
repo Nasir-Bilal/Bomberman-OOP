@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "gameGrid.h"
 #include "Brick.h"
+#include "Enemy.h"
 #include "entity.h"
 
 class Bomb :public Entity
@@ -51,7 +52,7 @@ public:
     }
 
 
-    void distroyBricks(Brick** bricks)
+    void distroyBricks(Brick** bricks,Enemy** creep)
     {
         const int BOUNDSIZE = 2;
         sf::FloatRect newBounds[BOUNDSIZE];
@@ -71,15 +72,10 @@ public:
         newBounds[1].width = 40 * 3;
         printBounds(newBounds[1]);
 
-        
-
-
-
-      
-
         for (int i = 0; i < bricks[0]->getnBrick() && bricks[i]!=NULL; i++) {
             for(int j=0; j<BOUNDSIZE; j++)
-            if (newBounds[j].intersects(bricks[i]->sprite.getGlobalBounds()) && bricks[i]->getID() == 'W')
+            if (newBounds[j].intersects(bricks[i]->sprite.getGlobalBounds())
+                && bricks[i]->getID() == 'W')
             {
                 delete bricks[i];
                 for (int j = i; j < bricks[0]->getnBrick()-1; j++)
@@ -88,6 +84,19 @@ public:
                 }
                 bricks[bricks[0]->getnBrick()] = NULL;
             }
+        }
+
+        for (int i = 0; i < creep[0]->getnEnemy() && (creep) != NULL; i++) {
+            for (int j = 0; j < BOUNDSIZE; j++)
+                if (newBounds[j].intersects(creep[i]->sprite.getGlobalBounds()))
+                {
+                    
+                    for (int j = i; j < creep[0]->getnEnemy() - 1; j++)
+                    {
+                        creep[j] = creep[j + 1];
+                    }
+                    bricks[bricks[0]->getnBrick()] = NULL;
+                }
         }
 
     }

@@ -12,7 +12,7 @@ public:
 
 public:
     // Constructor to initialize the grid with empty characters
-    GameGrid() {
+  GameGrid() {
         for (int i = 0; i < ROWS; ++i) 
         {
             for (int j = 0; j < COLS; ++j) 
@@ -48,6 +48,19 @@ public:
 
                 grid[j][m] = 'W'; 
                 i++; 
+            }
+        }
+
+        //for enemies
+        for (int i = 0; i < 10; ) {
+            int j = (ROWS / 2) + rand() % (ROWS - (ROWS / 2));
+            int m = (COLS / 2) + rand() % (COLS - (COLS / 2));
+
+            if (grid[j][m] == '0') {
+                cout << "Enemy j: " << j << endl << "Enemy m: " << m << endl << endl;
+
+                grid[j][m] = 'E';
+                i++;
             }
         }
 

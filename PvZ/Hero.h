@@ -5,10 +5,13 @@
 #include "Bomb.h"
 #include "Brick.h"
 #include "entity.h"
+#include "Fire.h"
 #include "moveable.h"
+#include "ExitDoor.h"
 
 using namespace sf;
 const int CHANGE = 3;
+const int BOMBTIMER = 1;
 //hero
 
 class Hero : public Moveable{
@@ -16,6 +19,7 @@ private:
     sf::RectangleShape circle;
     sf::RectangleShape circle2;
     sf::Clock bombClock;
+    
     int lives;
     Bomb* bomb;
 
@@ -86,6 +90,7 @@ public:
         {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
             {
+
                 bomb = new Bomb(pos.x,pos.y);
                 bombClock.restart();
             }
@@ -94,17 +99,41 @@ public:
 
    
 
-    void boom(Brick** brick,Enemy** creep)
+    void boom(Brick** brick,Enemy** creep,Fire* fire[2],Exit*& Portal)
     {
 
-        if(bombClock.getElapsedTime().asSeconds()>3)
+        if(bombClock.getElapsedTime().asSeconds()>BOMBTIMER)
         {
             if (bomb != NULL)
             {
-                bomb->distroyBricks(brick,creep);
-
+                bomb->distroyBricks(brick,creep,Portal); //also enemy
+                fire[0] = new Fire(bomb->pos.x / 52, ((bomb->pos.y / 52) - 1), "vFire", 5, 1, 3);
+               
+                //fire[0]->pos.assignPosition(bomb->pos.x, bomb->pos.y - 52);
+                fire[1] = new Fire((bomb->pos.x / 52) - 1, ((bomb->pos.y / 52)), "hFire", 5, 3, 1);
+               
+                fire[0]->distroyBricks(brick, creep);
+                fire[1]->distroyBricks(brick, creep);
+              //  fire[1]->pos.assignPosition(bomb->pos.x-52, bomb->pos.y);
                 delete bomb;
                 bomb = NULL;
+                bombClock.restart();
+            }
+            else if (bomb == NULL && fire[0] != NULL&&fire[1]!= NULL)
+            {
+                
+            }
+        }
+
+        if (bombClock.getElapsedTime().asSeconds() > BOMBTIMER)
+        {
+            if (fire != NULL)
+            {
+
+                delete fire[0];
+                delete fire[1];
+                fire[0] = NULL;
+                fire[1] = NULL;
             }
         }
     }

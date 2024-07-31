@@ -51,7 +51,6 @@ public:
 
     void move(Brick** bricks, int numBricks) {
        
-        cout << ch << endl;
         switch (ch) {
         case 'A':
             if (canMove('U', bricks, numBricks)) {
@@ -102,8 +101,9 @@ public:
         }
     }
 
-    int getnEnemy() { return nEnemey; }
-    void setnEnemy(int x) { nEnemey = x; }
+   static int getnEnemy() { return Enemy::nEnemey; }
+   static void decrement_n_Enemy() { Enemy::nEnemey--; }
+   static void setnEnemy(int x) { Enemy::nEnemey = x; }
 
 };
 

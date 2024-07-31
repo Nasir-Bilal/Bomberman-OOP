@@ -52,9 +52,9 @@ public:
         }
 
         //for enemies
-        for (int i = 0; i < 10; ) {
-            int j = (ROWS / 2) + rand() % (ROWS - (ROWS / 2));
-            int m = (COLS / 2) + rand() % (COLS - (COLS / 2));
+        for (int i = 0; i < 8; ) {
+            int j = (ROWS / 2) + rand() % (ROWS - (ROWS / 2)-1);
+            int m = (COLS / 2) + rand() % (COLS - (COLS / 2)-1);
 
             if (grid[j][m] == '0') {
                 cout << "Enemy j: " << j << endl << "Enemy m: " << m << endl << endl;

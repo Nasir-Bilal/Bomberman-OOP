@@ -10,17 +10,12 @@ class Moveable : public Entity
 {
 protected:
 
-    int currentFrame = 0;
-    float FRAME_WIDTH = 52;
-    const float FRAME_HEIGHT = 50;
-    const int TOTAL_FRAMES = 8;
-    const float ANIMATION_SPEED = 0.1f;
-    sf::Clock animationClock;
+   
    const int CHANGE;
 
 public:
     Moveable(int x, int y,int change,int frames)
-        :TOTAL_FRAMES(frames), Entity(x,y), CHANGE(change) {}
+        : Entity(x,y,frames), CHANGE(change) {}
 
     virtual void draw(RenderWindow& window) = 0;
 
@@ -30,7 +25,6 @@ public:
     {
         
         sf::FloatRect newBounds = sprite.getGlobalBounds();
-        cout << CHANGE << endl;
         switch (direction) {
         case 'U':
             newBounds.top -= CHANGE;
@@ -69,11 +63,5 @@ public:
 
 
 
-    void animation() {
-        if (animationClock.getElapsedTime().asSeconds() >= ANIMATION_SPEED) {
-            currentFrame = (currentFrame + 1) % TOTAL_FRAMES;
-            sprite.setTextureRect(sf::IntRect(currentFrame * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT));
-            animationClock.restart(); // Restart the clock for the next frame update
-        }
-    }
+   
 };

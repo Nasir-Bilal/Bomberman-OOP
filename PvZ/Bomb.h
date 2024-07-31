@@ -5,6 +5,7 @@
 #include "Brick.h"
 #include "Enemy.h"
 #include "entity.h"
+#include "ExitDoor.h"
 
 class Bomb :public Entity
 {
@@ -52,7 +53,7 @@ public:
     }
 
 
-    void distroyBricks(Brick** bricks,Enemy** creep)
+    void distroyBricks(Brick** bricks,Enemy** creep,Exit*& Portal)
     {
         const int BOUNDSIZE = 2;
         sf::FloatRect newBounds[BOUNDSIZE];
@@ -60,6 +61,7 @@ public:
         {
             newBounds[i] = sprite.getGlobalBounds();
         }
+
         printBounds(newBounds[0]);
         printBounds(newBounds[1]);
         cout << endl;
@@ -74,29 +76,57 @@ public:
 
         for (int i = 0; i < bricks[0]->getnBrick() && bricks[i]!=NULL; i++) {
             for(int j=0; j<BOUNDSIZE; j++)
-            if (newBounds[j].intersects(bricks[i]->sprite.getGlobalBounds())
-                && bricks[i]->getID() == 'W')
             {
-                delete bricks[i];
-                for (int j = i; j < bricks[0]->getnBrick()-1; j++)
+                if (newBounds[j].intersects(bricks[i]->sprite.getGlobalBounds())
+                    && bricks[i]->getID() == 'W')
                 {
-                    bricks[j] = bricks[j + 1];
+                    if (bricks[i]->reallyExit())
+                    {
+                        Portal = new Exit(bricks[i]->pos.x/52, bricks[i]->pos.y/52,10,54,54,0.2f);
+                        Portal->pos.x -= 1;
+                        Portal->pos.y -= 1;
+                        cout << "Portal Created!!!" << endl;
+                        
+                     }
+                    
+                    delete bricks[i];
+                    for (int j = i; j < bricks[0]->getnBrick() - 1; j++)
+                    {
+                        bricks[j] = bricks[j + 1];
+                    }
+                    bricks[bricks[0]->getnBrick()] = NULL;
+                    
                 }
-                bricks[bricks[0]->getnBrick()] = NULL;
             }
         }
 
-        for (int i = 0; i < creep[0]->getnEnemy() && (creep) != NULL; i++) {
+
+        for (int i = 0; i < Enemy::getnEnemy(); )
+        {
+            bool enemyRemoved = false; 
             for (int j = 0; j < BOUNDSIZE; j++)
-                if (newBounds[j].intersects(creep[i]->sprite.getGlobalBounds()))
+            {
+                if (creep[i] != NULL &&
+                    newBounds[j].intersects(creep[i]->sprite.getGlobalBounds()))
                 {
-                    
-                    for (int j = i; j < creep[0]->getnEnemy() - 1; j++)
+                   //deleteing and shifting array
+                    delete creep[i];
+                    for (int k = i; k < Enemy::getnEnemy() - 1; k++)
                     {
-                        creep[j] = creep[j + 1];
+                        creep[k] = creep[k + 1];
                     }
-                    bricks[bricks[0]->getnBrick()] = NULL;
+                    creep[Enemy::getnEnemy() - 1] = NULL; //Seting the last element to NULL
+                    //Enemy::setnEnemy( n-1);
+                    Enemy::decrement_n_Enemy();
+                    int n = Enemy::getnEnemy();
+                   // cout << n << endl;
+                    enemyRemoved = true;
+                    break; 
                 }
+            }
+            if (enemyRemoved)
+                continue;
+            i++;
         }
 
     }

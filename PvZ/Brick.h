@@ -10,9 +10,15 @@ class Brick: public Entity
 protected:
     static int nBrick;
     char id;
-
+    bool isExit;
 public:
-    Brick(int x, int y,char id) :Entity(x, y),id(id)  { nBrick = 0; }
+    Brick(int x, int y,char id) :Entity(x, y),id(id)  
+    {
+        nBrick = 0; 
+        isExit = false;
+    }
+    bool reallyExit() { return isExit; } //getter
+    void yesExit(bool bl) { isExit = bl; }//setter
     
     // Virtual destructor to ensure derived class destructors are called
     virtual ~Brick() {}

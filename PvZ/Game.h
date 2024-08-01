@@ -320,37 +320,69 @@ public:
 
     void mainMenue()
     {
+        sf::Font font;
+        if (!font.loadFromFile("../SFML/Images/bmFont.ttf")) {
+            std::cout << "Font not loaded" << std::endl;
+        }
+
+        sf::Text text;
+        text.setFont(font);
+        text.setString("Start Game");
+        text.setCharacterSize(40);
+        text.setFillColor(sf::Color::Yellow);
+       
+        text.setPosition(320 - text.findCharacterPos(3).x, 400);
+
+
+        sf::Text loadText;
+        loadText.setFont(font);
+        loadText.setString("Load Game");
+        loadText.setCharacterSize(40);
+        loadText.setFillColor(sf::Color::White);
+        
+        loadText.setPosition(340 -loadText.findCharacterPos(3).x, 480);
 
         while(window.isOpen())
         {
             window.draw(menu_s);//background
-           
-          
+            window.draw(text);
+            window.draw(loadText);
             window.display();
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-            {
-                break;
-          }
-               
-
-                sf::Event event;
-                while (window.pollEvent(event))
-                {
-                    // Window closing conditions
-                    if (event.type == Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                    {
-                        window.close();
-                    }
-                }
            
-            window.clear();
+            if (text.getFillColor() == sf::Color::Yellow)
+            {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+                {
+                    break;
+                }
+            }
 
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            {
+                loadText.setFillColor(sf::Color::Yellow);
+                text.setFillColor(sf::Color::White);
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            {
+                loadText.setFillColor(sf::Color::White);
+                text.setFillColor(sf::Color::Yellow);
+            }
+
+
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                // Window closing conditions
+                if (event.type == Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                {
+                    window.close();
+                }
+            }
+           
+            window.clear(); // Clear the previous frame
+          
         }
-            
-        
-
     }
-
-
 };

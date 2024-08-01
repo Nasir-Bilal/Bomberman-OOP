@@ -17,9 +17,9 @@ class Enemy : public Moveable
 protected:
     sf::RectangleShape circle;
     sf::RectangleShape circle2;
-    static int nEnemey;
     char ch;
 public:
+    static int nEnemey;
     Enemy(int x = 52, int y = 52)
         : Moveable(x, y, ::CHANGE1,6), circle(sf::Vector2f(2, 2))
         , circle2(sf::Vector2f(2, 2)), ch('A')

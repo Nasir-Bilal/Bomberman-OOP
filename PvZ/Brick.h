@@ -8,10 +8,10 @@ using namespace sf;
 class Brick: public Entity
 {
 protected:
-    static int nBrick;
-    char id;
     bool isExit;
 public:
+    static int nBrick;
+    char id;
     Brick(int x, int y,char id) :Entity(x, y),id(id)  
     {
         nBrick = 0; 
@@ -33,6 +33,7 @@ public:
     int getnBrick() { return nBrick; }
     void setnBrick(int n) { nBrick = n; }
     char getID() { return id; }
+
 };
 
  int Brick::nBrick = 0;

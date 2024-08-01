@@ -1,0 +1,565 @@
+herox 268
+heroy 523
+totalBricks: 107
+
+brickid: S
+brickx: 0
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 52
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 104
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 156
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 208
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 260
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 312
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 364
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 416
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 468
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 520
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 572
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 624
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 676
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 0
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 52
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 52
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 104
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 208
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 312
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 416
+bricky: 104
+isExit: 0
+
+brickid: W
+brickx: 468
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 520
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 624
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 104
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 156
+isExit: 0
+
+brickid: W
+brickx: 156
+bricky: 156
+isExit: 0
+
+brickid: W
+brickx: 520
+bricky: 156
+isExit: 0
+
+brickid: W
+brickx: 676
+bricky: 156
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 156
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 104
+bricky: 208
+isExit: 0
+
+brickid: W
+brickx: 156
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 208
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 312
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 416
+bricky: 208
+isExit: 0
+
+brickid: W
+brickx: 468
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 520
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 624
+bricky: 208
+isExit: 0
+
+brickid: W
+brickx: 676
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 208
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 260
+isExit: 0
+
+brickid: W
+brickx: 208
+bricky: 260
+isExit: 0
+
+brickid: W
+brickx: 416
+bricky: 260
+isExit: 0
+
+brickid: W
+brickx: 468
+bricky: 260
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 260
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 104
+bricky: 312
+isExit: 0
+
+brickid: W
+brickx: 156
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 208
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 312
+bricky: 312
+isExit: 0
+
+brickid: W
+brickx: 364
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 416
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 520
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 624
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 312
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 364
+isExit: 0
+
+brickid: W
+brickx: 104
+bricky: 364
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 364
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 104
+bricky: 416
+isExit: 0
+
+brickid: W
+brickx: 156
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 208
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 312
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 416
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 520
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 624
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 416
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 468
+isExit: 0
+
+brickid: W
+brickx: 104
+bricky: 468
+isExit: 0
+
+brickid: W
+brickx: 416
+bricky: 468
+isExit: 0
+
+brickid: W
+brickx: 624
+bricky: 468
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 468
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 104
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 208
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 312
+bricky: 520
+isExit: 0
+
+brickid: W
+brickx: 364
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 416
+bricky: 520
+isExit: 0
+
+brickid: W
+brickx: 468
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 520
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 624
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 520
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 572
+isExit: 0
+
+brickid: W
+brickx: 208
+bricky: 572
+isExit: 0
+
+brickid: W
+brickx: 312
+bricky: 572
+isExit: 1
+
+brickid: W
+brickx: 364
+bricky: 572
+isExit: 0
+
+brickid: W
+brickx: 468
+bricky: 572
+isExit: 0
+
+brickid: W
+brickx: 520
+bricky: 572
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 572
+isExit: 0
+
+brickid: S
+brickx: 0
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 52
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 104
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 156
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 208
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 260
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 312
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 364
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 416
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 468
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 520
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 572
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 624
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 676
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 624
+isExit: 0
+
+brickid: S
+brickx: 728
+bricky: 624
+isExit: 0
+
+totalEnemy: 8
+
+enemyx: 362
+enemyy: 376
+
+enemyx: 426
+enemyy: 578
+
+enemyx: 686
+enemyy: 497
+
+enemyx: 247
+enemyy: 52
+
+enemyx: 572
+enemyy: 583
+
+enemyx: 621
+enemyy: 272
+
+enemyx: 575
+enemyy: 584
+
+enemyx: 686
+enemyy: 390
+

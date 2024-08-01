@@ -16,8 +16,7 @@ const int BOMBTIMER = 1;
 
 class Hero : public Moveable{
 private:
-    sf::RectangleShape circle;
-    sf::RectangleShape circle2;
+  
     sf::Clock bombClock;
     
     int lives;
@@ -25,28 +24,22 @@ private:
 
 public:
     Hero(int x = 52, int y = 52)
-        : Moveable(x, y,::CHANGE,8), circle(sf::Vector2f(2, 2)),
-        circle2(sf::Vector2f(2, 2)),lives(3) {
+        : Moveable(x, y,::CHANGE,8) ,lives(3) {
         if (!texture.loadFromFile("../SFML/Images/Bman2.png")) {
             std::cout << "Error loading Bman texture" << std::endl;
         }
         sprite.setTexture(texture);
-        circle.setFillColor(sf::Color::Green);
-        circle2.setFillColor(sf::Color::Green);
+      
         sprite.setTextureRect(sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT));
         bomb = NULL;
         isPresent = true;
     }
 
     void draw(RenderWindow& window) override {
-        circle2 = circle;
+        
         sprite.setPosition(pos.x, pos.y);
        sprite.setScale(0.8f, 0.8f);
-        circle.setPosition(pos.x, pos.y);
-        circle2.setPosition(pos.x, pos.y + 128);
-        window.draw(circle);
-        window.draw(circle2);
-
+        
 
         if (bomb != NULL)
         {

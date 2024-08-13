@@ -41,8 +41,8 @@ public:
         sprite.setScale(0.8f, 0.8f);
         circle.setPosition(pos.x, pos.y);
         circle2.setPosition(pos.x, pos.y + 128);
-        window.draw(circle);
-        window.draw(circle2);
+       // window.draw(circle);
+        //window.draw(circle2);
 
         window.draw(sprite);
     }

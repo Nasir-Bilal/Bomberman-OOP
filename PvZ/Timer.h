@@ -25,7 +25,7 @@ public:
 		if (MainClock.getElapsedTime().asMilliseconds() >= 60000) return 1;
 
 		if (rec.getSize().x < 180) {
-			float rect_width = (180 * MainClock.getElapsedTime().asMilliseconds()) / 5000;
+			float rect_width = (180 * MainClock.getElapsedTime().asMilliseconds()) / 50000;
 			rec.setSize(Vector2f(rect_width, 40));
 			rec.setPosition(start_x + 180 - rect_width, start_y);
 		}

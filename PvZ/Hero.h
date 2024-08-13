@@ -17,14 +17,15 @@ const int BOMBTIMER = 1;
 class Hero : public Moveable{
 private:
   
-    sf::Clock bombClock;
-    
-    int lives;
+    Clock bombClock;
     Bomb* bomb;
 
 public:
+    Clock redClock;
+    bool isRed;
+    int lives;
     Hero(int x = 52, int y = 52)
-        : Moveable(x, y,::CHANGE,8) ,lives(3) {
+        : Moveable(x, y,::CHANGE,8) ,lives(4) {
         if (!texture.loadFromFile("../SFML/Images/Bman2.png")) {
             std::cout << "Error loading Bman texture" << std::endl;
         }
@@ -33,6 +34,7 @@ public:
         sprite.setTextureRect(sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT));
         bomb = NULL;
         isPresent = true;
+        isRed = false;
     }
 
     void draw(RenderWindow& window) override {
@@ -45,7 +47,7 @@ public:
         {
             bomb->draw(window);
         }
-        window.draw(sprite);
+        window.draw(sprite );
     }
 
   
@@ -99,7 +101,9 @@ public:
         {
             if (bomb != NULL)
             {
-                bomb->distroyBricks(brick,creep,Portal); //also enemy
+                FloatRect bManBounds(this->sprite.getGlobalBounds());
+
+                bomb->distroyBricks(brick,creep,Portal,bManBounds,lives, this->isRed, this->redClock); //also enemy
                 fire[0] = new Fire(bomb->pos.x / 52, ((bomb->pos.y / 52) - 1), "vFire", 5, 1, 3);
                
                 //fire[0]->pos.assignPosition(bomb->pos.x, bomb->pos.y - 52);
@@ -133,4 +137,20 @@ public:
 
     int getLives() { return 3; }
    
+
+   
+        bool enemyCollision(Enemy **creep, int numEnemies=Enemy::nEnemey)
+        {
+            sf::FloatRect bounds = sprite.getGlobalBounds();
+            for (int i = 0; i < numEnemies; i++) {
+                if (bounds.intersects(creep[i]->sprite.getGlobalBounds())) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        bool reallyRed() { return isRed; }
+        void setRed(bool x) { isRed = x; }
+    
 };

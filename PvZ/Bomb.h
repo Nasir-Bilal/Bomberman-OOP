@@ -7,6 +7,7 @@
 #include "entity.h"
 #include "ExitDoor.h"
 
+
 class Bomb :public Entity
 {
 private:
@@ -16,7 +17,7 @@ private:
     const int TOTAL_FRAMES = 3;
     const float ANIMATION_SPEED = 0.1f;
 	sf::Clock animationClock;
-
+    Clock bombCollisionClock;
    
 
 public:
@@ -53,7 +54,8 @@ public:
     }
 
 
-    void distroyBricks(Brick** bricks,Enemy** creep,Exit*& Portal)
+    void distroyBricks(Brick** bricks,Enemy** creep,Exit*& Portal,
+        FloatRect& bManBounds,int&lives, bool& isRed, Clock& redClock)
     {
         const int BOUNDSIZE = 2;
         sf::FloatRect newBounds[BOUNDSIZE];
@@ -64,7 +66,6 @@ public:
 
         printBounds(newBounds[0]);
         printBounds(newBounds[1]);
-        cout << endl;
 
         newBounds[0].top -= 35;
         newBounds[0].height = 40 * 3;
@@ -74,6 +75,24 @@ public:
         newBounds[1].width = 40 * 3;
         printBounds(newBounds[1]);
 
+       
+
+        if(bombCollisionClock.getElapsedTime().asSeconds()<2 && !isRed)
+        //enemy and bomb collision
+        {
+            for (int i = 0; i < BOUNDSIZE; i++)
+            {
+                if (newBounds[i].intersects(bManBounds))
+                {
+                    lives--;
+                    isRed = 1;
+                    redClock.restart();
+                    break;
+                }
+            }
+        }
+
+        //brick and bomb collision
         for (int i = 0; i < bricks[0]->getnBrick() && bricks[i]!=NULL; i++) {
             for(int j=0; j<BOUNDSIZE; j++)
             {
@@ -83,6 +102,7 @@ public:
                     if (bricks[i]->reallyExit())
                     {
                         Portal = new Exit(bricks[i]->pos.x/52, bricks[i]->pos.y/52,10,54,54,0.2f);
+                        Portal->i = i;
                         Portal->pos.x -= 1;
                         Portal->pos.y -= 1;
                         cout << "Portal Created!!!" << endl;
@@ -100,7 +120,7 @@ public:
             }
         }
 
-
+        //enemy and bomb colliion
         for (int i = 0; i < Enemy::getnEnemy(); )
         {
             bool enemyRemoved = false; 

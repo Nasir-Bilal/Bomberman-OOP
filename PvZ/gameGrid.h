@@ -44,7 +44,6 @@ public:
             int m = 1 + rand() % COLS; 
             if (m < COLS && j < ROWS && grid[j][m] == '0' && m!=0 && j!=0 && m!=1&& j!=1) 
             {
-                cout << "j: " << j << endl << "m: " << m << endl << endl;
 
                 grid[j][m] = 'W'; 
                 i++; 
@@ -57,7 +56,6 @@ public:
             int m = (COLS / 2) + rand() % (COLS - (COLS / 2)-1);
 
             if (grid[j][m] == '0') {
-                cout << "Enemy j: " << j << endl << "Enemy m: " << m << endl << endl;
 
                 grid[j][m] = 'E';
                 i++;

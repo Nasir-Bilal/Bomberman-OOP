@@ -29,6 +29,7 @@ const int MAX_ENEMY = 10;
 using namespace sf;
 using namespace std;
 
+sf::Font font;
 
 
 class Game
@@ -40,7 +41,8 @@ private:
     sf::Image menu_image;
     sf::Texture menu_t;
     sf::Sprite menu_s;
-
+    sf::Image gameover_image;
+    sf::Image victory_image;
     sf::Image map_image;
     sf::Texture t_map;
     sf::Sprite s_map;
@@ -64,6 +66,9 @@ private:
 
     Exit* Portal;
 
+    Text livesText;
+   
+    
     
 
 public:
@@ -73,6 +78,8 @@ public:
         isTimeTrial = false;
         isLoad = false;
         menu_image.loadFromFile("../SFML/Images/menu.jpg");
+        gameover_image.loadFromFile("../SFML/Images/gameover.png");
+        victory_image.loadFromFile("../SFML/Images/victory1.png");
         menu_t.loadFromImage(menu_image);
         menu_s.setTexture(menu_t);
         menu_s.setPosition(0, 0);
@@ -99,12 +106,22 @@ public:
 
 
         if (!buffer.loadFromFile("../SFML/Images/pop.wav")) {
-            std::cout << "Error loading sound file!" << std::endl;
+            cout << "Error loading sound file!" << std::endl;
         }
 
         sound.setBuffer(buffer);
         Portal = NULL;
         Portal = NULL;
+
+        if (!font.loadFromFile("../SFML/Images/bmFont.ttf")) {
+            //cout << "Font not loaded" << std::endl;
+        }
+
+        livesText.setFont(font);
+        livesText.setString("LIVES: ");
+        livesText.setCharacterSize(20);
+        livesText.setFillColor(sf::Color::White);
+        livesText.setPosition(600, 10);
     }
 
     ~Game()
@@ -112,6 +129,8 @@ public:
         // Clean up allocated memory
         for (int i = 0; i < nBricks; i++)
         {
+            if (Portal != NULL && Portal->i == i)
+                continue;
             if(bricks[i]!=NULL)
                 delete bricks[i];
         }
@@ -125,14 +144,17 @@ public:
 
 
 
-    int start()
+    bool start()
     {
-        cout << endl;
+       
+      
+
+
         window.setPosition(Vector2i(0, 0));
         window.setFramerateLimit(60);
 
         mainMenue();
-        cout << "ok" << endl;
+
         if(!isLoad)
         {
             grid.display();
@@ -145,9 +167,9 @@ public:
             {
                 if (bricks[j]->getID() == 'S')
                 {
-                    cout << "K: " << k << endl;
-                    cout << "position x: " << bricks[j]->pos.x << endl;
-                    cout << "position y: " << bricks[j]->pos.y << endl << endl;
+                    //cout << "K: " << k << endl;
+                    //cout << "position x: " << bricks[j]->pos.x << endl;
+                    //cout << "position y: " << bricks[j]->pos.y << endl << endl;
                     k++;
                 }
             }
@@ -183,11 +205,25 @@ public:
         }
 
         TimeClock ttime;
+        bool i = 0;
         // Game loop
         while (window.isOpen())
         {
-          
+            
 
+            if (bMan.redClock.getElapsedTime().asSeconds() > 2)
+                bMan.setRed(0);
+
+            if (bMan.reallyRed())
+            {
+                //apply red tint
+                bMan.sprite.setColor(sf::Color(255, 0, 0, 128));
+            }
+            else
+            {
+                //reset
+                bMan.sprite.setColor(sf::Color::White);
+            }
 
             //File handling
 
@@ -224,10 +260,24 @@ public:
                 }
             }
 
+            
+                if (bMan.enemyCollision(creep) && !bMan.reallyRed() && i)
+                {
+                   
+                    bMan.lives--;
+                    bMan.setRed(1);
+                    bMan.redClock.restart();
+                }
+                i = true;
+            
+            
+
             bMan.plantBomb();
 
             bMan.boom(bricks, creep,fire,Portal);
 
+           
+           
             sf::Event event;
             while (window.pollEvent(event))
             {
@@ -237,35 +287,29 @@ public:
                     window.close();
                 }
             }
+            if ((isTimeTrial && ttime.action(window)) || bMan.lives<= 0) 
+            {
 
-            window.clear();
-            display(window);
-            if (isTimeTrial && ttime.action(window)) {
+               return gameOverScreen();
+                
+            }
 
-                menu_image.loadFromFile("../SFML/Images/gameover.png");
-                menu_t.loadFromImage(menu_image);
-                menu_s.setTexture(menu_t);
-                menu_s.setPosition(0, 0);
 
-                while (window.isOpen()) {
-
-                    sf::Event event2;
-                    while (window.pollEvent(event2))
-                    {
-                        // Window closing conditions
-                        if (event2.type == Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                        {
-                            window.close();
-                        }
-                    }
-
-                    window.clear();
-                    display(window);
-
-                    window.draw(menu_s);
-                    window.display();
+            //PORTAL COLLISION
+            if (Portal != NULL)
+            {
+                FloatRect portalBounds(Portal->sprite.getGlobalBounds());
+                if (portalBounds.intersects(bMan.sprite.getGlobalBounds()))
+                {
+                    return victoryScreen();
                 }
             }
+            window.clear();
+            display(window);
+          
+            string livetxt = "LIVES " + to_string(bMan.lives);
+            livesText.setString(livetxt);
+            window.draw(livesText);
             window.display();
         }
         return 0;
@@ -280,7 +324,7 @@ public:
             fire[1]->draw(window);
 
         }
-        window.draw(s_map);
+      
 
         // Draw all bricks
         for (int i = 0; i < nBricks; i++)
@@ -315,6 +359,7 @@ public:
             }
         }
         
+        
     }
 
     void brickFactory()
@@ -330,14 +375,12 @@ public:
                 {
                     bricks[nBricks] = new solidBrick(j, i, 'S'); // Add SolidBrick 
                     nBricks++;
-                    cout << "solid: " << nBricks << endl;
                 }
 
                 if (grid.getValue(i, j) == 'W' && nBricks < MAX_BRICKS)
                 {
                     bricks[nBricks] = new Explodable(j, i, 'W'); // Add Explodable brick 
                     nBricks++;
-                    cout << "Explodable: " << nBricks << endl;
 
                 }
             }
@@ -353,7 +396,6 @@ public:
                 i--;
             else
             {
-                cout << "Exit: " << i << endl;
                 bricks[i]->yesExit(1);
                // bricks[i]->pos.x -= 20;
                 break;
@@ -377,8 +419,7 @@ public:
                 }
             }
         }
-        cout << "Enemies created" << endl;
-        cout << "total enemies: " << nEnemy << endl;
+        
         Enemy::setnEnemy(nEnemy);
     }
 
@@ -387,7 +428,7 @@ public:
     {
         sf::Font font;
         if (!font.loadFromFile("../SFML/Images/bmFont.ttf")) {
-            std::cout << "Font not loaded" << std::endl;
+            //cout << "Font not loaded" << std::endl;
         }
 
         sf::Text text;
@@ -492,7 +533,7 @@ public:
 
     void saveGame()
     {
-        cout << "game saved" << endl;
+        //cout << "game saved" << endl;
 
         ofstream file("gameData.txt");
 
@@ -518,7 +559,6 @@ public:
         }
 
         file.close();
-
 
     }
 
@@ -551,12 +591,9 @@ public:
         lineNumber++;
         totalBricks = stoi(line.substr(line.find(':') + 2));
 
-        cout << "bmanx: " << x << endl;
-        cout << "bmaxy: " << y << endl;
-        cout << "lessgooo" << endl;
-        // Resize the bricks array to fit the loaded data
-        // Assuming bricks is a vector, otherwise you need to adjust based on the data structure used
-        cout << totalBricks << endl;
+       
+      
+        
         
         for (int i = 0; i < totalBricks; i++)
         {
@@ -576,28 +613,25 @@ public:
             lineNumber++;
             bool isExit = (line.substr(line.find(':') + 2) == "1");
 
-            cout << "id: " << id << endl;
-            cout << "x: " << x << endl;
-            cout << "y: " << y << endl;
+           
 
-            // Assuming bricks is a vector of pointers and that there is a constructor or method to initialize the bricks
             if (id == 'S' && nBricks < MAX_BRICKS)
             {
                 bricks[nBricks] = new solidBrick(x/52, y/52, 'S'); // Add SolidBrick 
                 nBricks++;
-                cout << "solid: " << nBricks << endl;
+              
             }
 
             if (id == 'W' && nBricks < MAX_BRICKS)
             {
                 bricks[nBricks] = new Explodable(x/52, y/52, 'W'); // Add Explodable brick 
                 nBricks++;
-                cout << "Explodable: " << nBricks << endl;
+              
 
             }
         }
 
-        // Read total enemies
+      
         // Read total enemies
         getline(file, line); // Skip "totalEnemy:"
         lineNumber++;
@@ -605,23 +639,20 @@ public:
         lineNumber++;
         totalEnemies = stoi(line.substr(line.find(':') + 2));
 
-        cout << "Total Enemies: " << totalEnemies << endl;
-        cout << nEnemy << endl;
+        //cout << "Total Enemies: " << totalEnemies << endl;
+        //cout << nEnemy << endl;
         getline(file, line);
         lineNumber++;
        
-        cout << "line: " << lineNumber << " " << line << endl;
-
+        //cout << "line: " << lineNumber << " " << line << endl;
 
         while(nEnemy<totalEnemies)
         {
-            
             getline(file, line); // enemyx
             lineNumber++;
 
-            cout << "line: " << lineNumber << " " << line << endl;
+            //cout << "line: " << lineNumber << " " << line << endl;
             int x = stoi(line.substr(line.find("x:") + 2));
-
 
             getline(file, line); // enemyy
             lineNumber++;
@@ -633,19 +664,175 @@ public:
                 nEnemy++;
             }
 
-            cout << "Enemy X: " << x << endl;
-            cout << "Enemy Y: " << y << endl<<endl;
+            //cout << "Enemy X: " << x << endl;
+            //cout << "Enemy Y: " << y << endl<<endl;
             getline(file, line); // enemyx
             lineNumber++;
-
         }
-
-
         file.close();
     }
 
 
+    bool gameOverScreen()
+    {
+        menu_t.loadFromImage(gameover_image);
+        menu_s.setTexture(menu_t);
+        sf::Font font;
+        if (!font.loadFromFile("../SFML/Images/bmFont.ttf")) {
+            cout << "Font not loaded" << std::endl;
+        }
+
+        sf::Text text;
+        text.setFont(font);
+        text.setString("Main Menu");
+        text.setCharacterSize(40);
+        text.setFillColor(sf::Color::Yellow);
+        text.setPosition(320 - text.getLocalBounds().width / 2, 400);
+
+        sf::Text timeText;
+        timeText.setFont(font);
+        timeText.setString("Exit");
+        timeText.setCharacterSize(40);
+        timeText.setFillColor(sf::Color::White);
+        timeText.setPosition(320 - timeText.getLocalBounds().width / 2, 440);
+
+        
+        sf::Text* currentSelection = &text; // Pointer to the currently selected text
+
+        while (window.isOpen())
+        {
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                {
+                    window.close();
+                }
+            }
+
+            if (delay.getElapsedTime().asMilliseconds() > 100)
+            {
+                delay.restart();
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                {
+                    if (currentSelection == &text)
+                    {
+                        currentSelection = &timeText;
+                        text.setFillColor(sf::Color::White);
+                        timeText.setFillColor(sf::Color::Yellow);
+                    }
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+                {
+                    if (currentSelection == &timeText)
+                    {
+                        currentSelection = &text;
+                        timeText.setFillColor(sf::Color::White);
+                        text.setFillColor(sf::Color::Yellow);
+                    }
+                }
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+            {
+                if (currentSelection == &text)
+                {
+                    return 1;
+                }
+                else if (currentSelection == &timeText)
+                {
+                    return 0;
+                }
+            }
 
 
+            window.clear(); // Clear the previous frame
+            window.draw(menu_s); // Draw background
+            window.draw(text);
+            window.draw(timeText);
+            window.display();
+        }
+    }
+
+    bool victoryScreen()
+    {
+        menu_t.loadFromImage(victory_image);
+        menu_s.setTexture(menu_t);
+        sf::Font font;
+        if (!font.loadFromFile("../SFML/Images/bmFont.ttf")) {
+            cout << "Font not loaded" << std::endl;
+        }
+
+        sf::Text text;
+        text.setFont(font);
+        text.setString("Main Menu");
+        text.setCharacterSize(40);
+        text.setFillColor(sf::Color::Yellow);
+        text.setPosition(320 - text.getLocalBounds().width / 2, 400);
+
+        sf::Text timeText;
+        timeText.setFont(font);
+        timeText.setString("Exit");
+        timeText.setCharacterSize(40);
+        timeText.setFillColor(sf::Color::White);
+        timeText.setPosition(320 - timeText.getLocalBounds().width / 2, 440);
+
+
+        sf::Text* currentSelection = &text; // Pointer to the currently selected text
+
+        while (window.isOpen())
+        {
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                {
+                    window.close();
+                }
+            }
+
+            if (delay.getElapsedTime().asMilliseconds() > 100)
+            {
+                delay.restart();
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                {
+                    if (currentSelection == &text)
+                    {
+                        currentSelection = &timeText;
+                        text.setFillColor(sf::Color::White);
+                        timeText.setFillColor(sf::Color::Yellow);
+                    }
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+                {
+                    if (currentSelection == &timeText)
+                    {
+                        currentSelection = &text;
+                        timeText.setFillColor(sf::Color::White);
+                        text.setFillColor(sf::Color::Yellow);
+                    }
+                }
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+            {
+                if (currentSelection == &text)
+                {
+                    return 1;
+                }
+                else if (currentSelection == &timeText)
+                {
+                    return 0;
+                }
+            }
+
+
+            window.clear(); // Clear the previous frame
+            window.draw(menu_s); // Draw background
+            window.draw(text);
+            window.draw(timeText);
+            window.display();
+        }
+    }
 
 };

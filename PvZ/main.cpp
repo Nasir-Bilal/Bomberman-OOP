@@ -13,10 +13,13 @@ using namespace std;
 
 int main()
 {
-	std::srand(time(0));
-	Game myGame;
-
-	myGame.start();
+	bool flag;
+	do 
+	{
+		srand(time(0));
+		Game myGame;
+		flag = myGame.start();
+	} while (flag);
 
 	return 0;
 }

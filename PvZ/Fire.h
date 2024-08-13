@@ -43,17 +43,6 @@ public:
         const int BOUNDSIZE = 2;
         sf::FloatRect newBounds=this->sprite.getGlobalBounds();
        
-        
-
-        
-
-     //   newBounds[0].top -= 35;
-       // newBounds[0].height = 40 * 3;
-      
-
-        //newBounds[1].left -= 35;
-        //newBounds[1].width = 40 * 3;
-    
         for (int i = 0; i < bricks[0]->getnBrick() && bricks[i] != NULL; i++) {
           
                 if (newBounds.intersects(bricks[i]->sprite.getGlobalBounds())

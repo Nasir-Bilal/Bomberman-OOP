@@ -17,9 +17,11 @@ private:
     const int HEIGHT = 52;
 
 public:
+    int i;
     Exit(int x, int y, int frames, int xx, int yy,float speed)
         : Entity(x * 52, y * 52, frames, xx, yy,speed)
     {
+        i = 0;
         if (!texture.loadFromFile("../SFML/Images/PortalL.png")) {
             cerr << "Error loading Fire texture" << endl;
         }

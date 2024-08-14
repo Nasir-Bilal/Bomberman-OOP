@@ -20,10 +20,9 @@ public:
     bool reallyExit() { return isExit; } //getter
     void yesExit(bool bl) { isExit = bl; }//setter
     
-    // Virtual destructor to ensure derived class destructors are called
     virtual ~Brick() {}
 
-    // Pure virtual function to draw the brick
+    //Pure virtual function 
     virtual void draw(RenderWindow& window)  = 0;
 
     // Set position of the brick

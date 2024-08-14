@@ -18,7 +18,9 @@ private:
     const float ANIMATION_SPEED = 0.1f;
 	sf::Clock animationClock;
     Clock bombCollisionClock;
-   
+    
+    Texture textureForPortal;
+
 
 public:
 
@@ -28,11 +30,17 @@ public:
         if (!texture.loadFromFile("../SFML/Images/Bomb.png")) {
             std::cout << "Error loading Bman texture" << std::endl;
         }
+        if (!textureForPortal.loadFromFile("../SFML/Images/PortalL.png")) {
+            cerr << "Error loading Fire texture" << endl;
+        }
+
+
         sprite.setTexture(texture);
       
         sprite.setTextureRect(sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT));
         sprite.setPosition(pos.x, pos.y);
         isPresent = true;
+
     }
 
     ~Bomb(){}
@@ -40,17 +48,13 @@ public:
     void draw(RenderWindow & window)
     {
         animation();
-        cout << "Get Position: "<<endl << pos.x << endl;
-        cout << pos.y << endl;
-        
+      
         window.draw(sprite);
     }
 
-    void printBounds(const sf::FloatRect& bounds) {
-        std::cout << "Left: " << bounds.left << std::endl;
-        std::cout << "Top: " << bounds.top << std::endl;
-        std::cout << "Width: " << bounds.width << std::endl;
-        std::cout << "Height: " << bounds.height << std::endl;
+    void printBounds(const sf::FloatRect& bounds)
+    {
+      
     }
 
 
@@ -64,21 +68,16 @@ public:
             newBounds[i] = sprite.getGlobalBounds();
         }
 
-        printBounds(newBounds[0]);
-        printBounds(newBounds[1]);
-
         newBounds[0].top -= 35;
         newBounds[0].height = 40 * 3;
-        printBounds(newBounds[0]);
-
+      
         newBounds[1].left -= 35;
         newBounds[1].width = 40 * 3;
-        printBounds(newBounds[1]);
-
-       
-
-        if(bombCollisionClock.getElapsedTime().asSeconds()<2 && !isRed)
-        //enemy and bomb collision
+        
+        //if the bomb time is increases
+        //then bombcollisionclock should also be incremented
+        if(bombCollisionClock.getElapsedTime().asSeconds()<3 && !isRed)
+        //bman and bomb collision
         {
             for (int i = 0; i < BOUNDSIZE; i++)
             {
@@ -93,32 +92,47 @@ public:
         }
 
         //brick and bomb collision
-        for (int i = 0; i < bricks[0]->getnBrick() && bricks[i]!=NULL; i++) {
-            for(int j=0; j<BOUNDSIZE; j++)
-            {
-                if (newBounds[j].intersects(bricks[i]->sprite.getGlobalBounds())
-                    && bricks[i]->getID() == 'W')
-                {
-                    if (bricks[i]->reallyExit())
-                    {
-                        Portal = new Exit(bricks[i]->pos.x/52, bricks[i]->pos.y/52,10,54,54,0.2f);
+      // Assume bricks[0]->getnBrick() returns the number of bricks currently in the array
+        int totalBricks = bricks[0]->getnBrick();
+
+        for (int i = 0; i < totalBricks; i++) {
+            if (bricks[i] == NULL) {
+                continue;  // Skip already deleted bricks
+            }
+
+            for (int j = 0; j < BOUNDSIZE; j++) {
+                if (newBounds[j].intersects(bricks[i]->sprite.getGlobalBounds()) && bricks[i]->getID() == 'W') {
+                   
+                    
+                    if (bricks[i]->reallyExit()) {
+
+                        // Create a new Portal object
+                        Portal = new Exit(textureForPortal,bricks[i]->pos.x / 52, bricks[i]->pos.y / 52, 10, 54, 54, 0.2f);
                         Portal->i = i;
                         Portal->pos.x -= 1;
                         Portal->pos.y -= 1;
-                        cout << "Portal Created!!!" << endl;
-                        
-                     }
-                    
-                    delete bricks[i];
-                    for (int j = i; j < bricks[0]->getnBrick() - 1; j++)
-                    {
-                        bricks[j] = bricks[j + 1];
                     }
-                    bricks[bricks[0]->getnBrick()] = NULL;
-                    
+
+                    // Delete the brick
+                    delete bricks[i];
+                    bricks[i] = NULL;
+
+                    // Shift the remaining bricks to fill the gap
+                    for (int k = i; k < totalBricks - 1; k++) {
+                        bricks[k] = bricks[k + 1];
+                    }
+
+                    bricks[totalBricks - 1] = NULL;
+                   // bricks[0]->nBrick--;
+                    totalBricks--;
+
+                    // Break the inner loop and re-check current index
+
+                    break;
                 }
             }
         }
+
 
         //enemy and bomb colliion
         for (int i = 0; i < Enemy::getnEnemy(); )
@@ -141,6 +155,8 @@ public:
                     int n = Enemy::getnEnemy();
                    // cout << n << endl;
                     enemyRemoved = true;
+                   
+
                     break; 
                 }
             }

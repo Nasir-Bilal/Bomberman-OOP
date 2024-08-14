@@ -15,9 +15,10 @@ const int CHANGE1 = 1;
 class Enemy : public Moveable
 {
 protected:
-    sf::RectangleShape circle;
+    sf::RectangleShape circle; //for debugging
     sf::RectangleShape circle2;
     char ch;
+
 public:
     static int nEnemey;
     Enemy(int x = 52, int y = 52)
@@ -41,32 +42,31 @@ public:
         sprite.setScale(0.8f, 0.8f);
         circle.setPosition(pos.x, pos.y);
         circle2.setPosition(pos.x, pos.y + 128);
-       // window.draw(circle);
-        //window.draw(circle2);
-
         window.draw(sprite);
     }
 
 
 
     void move(Brick** bricks, int numBricks) {
-       
-        switch (ch) {
+
+        switch (ch) 
+        {
         case 'A':
             if (canMove('U', bricks, numBricks)) {
                 pos.updatePosition(0, -CHANGE);
-                animation(); // Update animation if needed
-
+                animation(); 
             }
-            else {
+            else 
+            {
                 ch = 'A' + rand() % 4;
             }
             break;
 
         case 'C':
-            if (canMove('D', bricks, numBricks)) {
+            if (canMove('D', bricks, numBricks)) 
+            {
                 pos.updatePosition(0, CHANGE);
-                animation(); // Update animation if needed
+                animation(); 
             }
             else {
                 ch = 'A' + rand() % 4;
@@ -76,7 +76,7 @@ public:
         case 'B':
             if (canMove('L', bricks, numBricks)) {
                 pos.updatePosition(-CHANGE, 0);
-                animation(); // Update animation if needed
+                animation(); 
             }
             else {
                ch = 'A' + rand() % 4;
@@ -104,6 +104,11 @@ public:
    static int getnEnemy() { return Enemy::nEnemey; }
    static void decrement_n_Enemy() { Enemy::nEnemey--; }
    static void setnEnemy(int x) { Enemy::nEnemey = x; }
+
+   ~Enemy()
+   {
+      
+   }
 
 };
 

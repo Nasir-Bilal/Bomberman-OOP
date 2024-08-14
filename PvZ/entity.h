@@ -52,23 +52,18 @@ public:
     Entity(int x,int y)
         :pos(x,y),isPresent(1){}
 
-   
-
     Entity(int x, int y, int frames, float frameWidth = 52, float frameHeight = 50, float animationSpeed = 0.1f)
         : TOTAL_FRAMES(frames),
         pos(x, y),
         FRAME_WIDTH(frameWidth),
         FRAME_HEIGHT(frameHeight),
         ANIMATION_SPEED(animationSpeed),
-        isPresent(1)
+        isPresent(1) //initilizer list ended here
     {
-    
         TOTAL_FRAMES = frames;
         FRAME_WIDTH = frameWidth;
         FRAME_HEIGHT = frameHeight;
         ANIMATION_SPEED = animationSpeed;
-
-        
     }
 
 

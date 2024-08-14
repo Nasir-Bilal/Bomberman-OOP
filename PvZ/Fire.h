@@ -23,15 +23,14 @@ public:
         if (!texture.loadFromFile("../SFML/Images/" + name + ".png")) {
             cerr << "Error loading Fire texture" << endl;
         }
-
         sprite.setTexture(texture);
         sprite.setTextureRect(sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT));
     }
 
     virtual ~Fire() {}
 
-    void draw(RenderWindow& window) override {
-      
+    void draw(RenderWindow& window) override 
+    {
         animation();
         sprite.setPosition(pos.x, pos.y);
         window.draw(sprite);
@@ -42,7 +41,7 @@ public:
     {
         const int BOUNDSIZE = 2;
         sf::FloatRect newBounds=this->sprite.getGlobalBounds();
-       
+       //destroying bricks
         for (int i = 0; i < bricks[0]->getnBrick() && bricks[i] != NULL; i++) {
           
                 if (newBounds.intersects(bricks[i]->sprite.getGlobalBounds())
@@ -55,8 +54,8 @@ public:
                     }
                     bricks[bricks[0]->getnBrick()] = NULL;
                 }
-            
         }
+        //destroying enemies ( creep )
         for (int i = 0; i < Enemy::getnEnemy(); )
         {
             bool enemyRemoved = false;

@@ -54,7 +54,7 @@ public:
 
         // Check for collisions
         for (int i = 0; i < numBricks; i++) {
-            if (newBounds.intersects(bricks[i]->sprite.getGlobalBounds())) {
+            if (bricks[i]!=NULL && newBounds.intersects(bricks[i]->sprite.getGlobalBounds())) {
                 return false; // Collision 
             }
         }

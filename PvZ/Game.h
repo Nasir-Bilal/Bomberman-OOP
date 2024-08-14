@@ -18,17 +18,9 @@
 using namespace sf;
 using namespace std;
 
+
 const int MAX_BRICKS = 300; // Adjust as needed
 const int MAX_ENEMY = 10;
-
-#pragma once
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-
-using namespace sf;
-using namespace std;
-
 sf::Font font;
 
 
@@ -59,16 +51,21 @@ private:
     int nEnemy;
     Fire* fire[2];
     sf::CircleShape* cr;
-    sf::SoundBuffer buffer;
-    sf::Sound sound;
-
     sf::Clock delay;
-
     Exit* Portal;
-
     Text livesText;
    
+    SoundBuffer buffer;
+    Sound sound;
     
+    SoundBuffer victoryBuffer;
+    Sound victorySound; 
+    
+    SoundBuffer overBuffer;
+    Sound overSound;
+
+    SoundBuffer livesBuffer;
+    Sound livesSound;
     
 
 public:
@@ -84,7 +81,7 @@ public:
         menu_s.setTexture(menu_t);
         menu_s.setPosition(0, 0);
 
-        map_image.loadFromFile("../SFML/Images/tileMap.png");
+        map_image.loadFromFile("../SFML/Images/tileMap5.jpg");
         t_map.loadFromImage(map_image);
         s_map.setTexture(t_map);
         s_map.setPosition(0, 0);
@@ -122,6 +119,21 @@ public:
         livesText.setCharacterSize(20);
         livesText.setFillColor(sf::Color::White);
         livesText.setPosition(600, 10);
+
+        if (!victoryBuffer.loadFromFile("../SFML/sound/victory.wav")) {
+            cout << "Error loading sound file!" << std::endl;
+        }
+        victorySound.setBuffer(victoryBuffer); 
+        
+        if (!livesBuffer.loadFromFile("../SFML/sound/lives--.wav")) {
+            cout << "Error loading sound file!" << std::endl;
+        }
+        livesSound.setBuffer(livesBuffer);
+        
+        if (!overBuffer.loadFromFile("../SFML/sound/over.mp3")) {
+            cout << "Error loading sound file!" << std::endl;
+        }
+        overSound.setBuffer(overBuffer);
     }
 
     ~Game()
@@ -206,17 +218,23 @@ public:
 
         TimeClock ttime;
         bool i = 0;
+        bool j = 0;
         // Game loop
         while (window.isOpen())
         {
-            
-
             if (bMan.redClock.getElapsedTime().asSeconds() > 2)
+            {
                 bMan.setRed(0);
+                j = 0;
+            }
 
             if (bMan.reallyRed())
             {
-                //apply red tint
+                if(j==0)
+                {
+                    livesSound.play();
+                    j=1;
+                }
                 bMan.sprite.setColor(sf::Color(255, 0, 0, 128));
             }
             else
@@ -287,16 +305,13 @@ public:
                     window.close();
                 }
             }
-            if ((isTimeTrial && ttime.action(window)) || bMan.lives<= 0) 
-            {
-
-               return gameOverScreen();
+          
+              
                 
-            }
-
+          
 
             //PORTAL COLLISION
-            if (Portal != NULL)
+            if (Portal != NULL&& creep[0]->nEnemey<1)
             {
                 FloatRect portalBounds(Portal->sprite.getGlobalBounds());
                 if (portalBounds.intersects(bMan.sprite.getGlobalBounds()))
@@ -305,10 +320,18 @@ public:
                 }
             }
             window.clear();
+
+
             display(window);
           
             string livetxt = "LIVES " + to_string(bMan.lives);
             livesText.setString(livetxt);
+            if ((isTimeTrial && ttime.action(window)) || bMan.lives <= 0)
+            {
+
+                return gameOverScreen();
+
+            }
             window.draw(livesText);
             window.display();
         }
@@ -329,9 +352,11 @@ public:
         // Draw all bricks
         for (int i = 0; i < nBricks; i++)
         {
-            bricks[i]->draw(window);
+            if(bricks[i]!=NULL)
+                bricks[i]->draw(window);
         }
 
+        bMan.draw(window);
         for (int i = 0; i < nEnemy; i++)
         {
             if (creep[i] != nullptr)
@@ -343,7 +368,6 @@ public:
         if(Portal!=NULL)
          Portal->draw(window);
 
-        bMan.draw(window);
 
         int k = 0;
         for (int i = 0; i < grid.ROWS; i++)
@@ -466,19 +490,24 @@ public:
             }
 
 
-            if (delay.getElapsedTime().asMilliseconds() > 100)  
+            if (delay.getElapsedTime().asMilliseconds() > 150)  
             {
                 delay.restart();
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
                 {
+                    sound.play();
+
                     if (currentSelection == &text)
                     {
+                        
                         currentSelection = &timeText;
                         text.setFillColor(sf::Color::White);
                         timeText.setFillColor(sf::Color::Yellow);
                     }
                     else if (currentSelection == &timeText)
                     {
+                       
+
                         currentSelection = &loadText;
                         timeText.setFillColor(sf::Color::White);
                         loadText.setFillColor(sf::Color::Yellow);
@@ -486,6 +515,7 @@ public:
                 }
                 else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
                 {
+                    sound.play();
                     if (currentSelection == &loadText)
                     {
                         currentSelection = &timeText;
@@ -510,6 +540,7 @@ public:
                 }
                 else if (currentSelection == &timeText)
                 {
+                    cout << "Time trial!!!" << endl;
                     isTimeTrial = 1;
                     break;
                 }
@@ -544,10 +575,21 @@ public:
         file << "totalBricks: " << Brick::nBrick << endl<<endl;
         for (int i = 0; i < Brick::nBrick; i++)
         {
-            file << "brickid: " << bricks[i]->id << endl;
-            file << "brickx: " << bricks[i]->pos.x << endl;
-            file << "bricky: " << bricks[i]->pos.y << endl;
-            file << "isExit: " << bricks[i]->reallyExit() <<endl<< endl;
+            if (bricks[i] == NULL)
+            {
+                file << "brickid: " << 1<< endl;
+                file << "brickx: " <<0<< endl;
+                file << "bricky: " <<0 << endl;
+                file << "isExit: " << 0<< endl << endl;
+
+            }
+            else
+            {
+                file << "brickid: " << bricks[i]->id << endl;
+                file << "brickx: " << bricks[i]->pos.x << endl;
+                file << "bricky: " << bricks[i]->pos.y << endl;
+                file << "isExit: " << bricks[i]->reallyExit() << endl << endl;
+            }
         }
 
 
@@ -675,6 +717,7 @@ public:
 
     bool gameOverScreen()
     {
+        overSound.play();
         menu_t.loadFromImage(gameover_image);
         menu_s.setTexture(menu_t);
         sf::Font font;
@@ -682,22 +725,12 @@ public:
             cout << "Font not loaded" << std::endl;
         }
 
-        sf::Text text;
-        text.setFont(font);
-        text.setString("Main Menu");
-        text.setCharacterSize(40);
-        text.setFillColor(sf::Color::Yellow);
-        text.setPosition(320 - text.getLocalBounds().width / 2, 400);
-
-        sf::Text timeText;
-        timeText.setFont(font);
-        timeText.setString("Exit");
-        timeText.setCharacterSize(40);
-        timeText.setFillColor(sf::Color::White);
-        timeText.setPosition(320 - timeText.getLocalBounds().width / 2, 440);
-
-        
-        sf::Text* currentSelection = &text; // Pointer to the currently selected text
+        sf::Text exitText;
+        exitText.setFont(font);
+        exitText.setString("Press Enter to Exit");
+        exitText.setCharacterSize(20);
+        exitText.setFillColor(sf::Color::Yellow);
+        exitText.setPosition(320 - exitText.getLocalBounds().width / 2, 440);
 
         while (window.isOpen())
         {
@@ -713,49 +746,24 @@ public:
             if (delay.getElapsedTime().asMilliseconds() > 100)
             {
                 delay.restart();
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
                 {
-                    if (currentSelection == &text)
-                    {
-                        currentSelection = &timeText;
-                        text.setFillColor(sf::Color::White);
-                        timeText.setFillColor(sf::Color::Yellow);
-                    }
-                }
-                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-                {
-                    if (currentSelection == &timeText)
-                    {
-                        currentSelection = &text;
-                        timeText.setFillColor(sf::Color::White);
-                        text.setFillColor(sf::Color::Yellow);
-                    }
+                    return 0; // Exit the game
                 }
             }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-            {
-                if (currentSelection == &text)
-                {
-                    return 1;
-                }
-                else if (currentSelection == &timeText)
-                {
-                    return 0;
-                }
-            }
-
 
             window.clear(); // Clear the previous frame
             window.draw(menu_s); // Draw background
-            window.draw(text);
-            window.draw(timeText);
+            window.draw(exitText); // Draw exit text
             window.display();
         }
+        return 0; // In case the loop ends
     }
-
     bool victoryScreen()
     {
+        victorySound.play();
+
+
         menu_t.loadFromImage(victory_image);
         menu_s.setTexture(menu_t);
         sf::Font font;
@@ -763,22 +771,12 @@ public:
             cout << "Font not loaded" << std::endl;
         }
 
-        sf::Text text;
-        text.setFont(font);
-        text.setString("Main Menu");
-        text.setCharacterSize(40);
-        text.setFillColor(sf::Color::Yellow);
-        text.setPosition(320 - text.getLocalBounds().width / 2, 400);
-
-        sf::Text timeText;
-        timeText.setFont(font);
-        timeText.setString("Exit");
-        timeText.setCharacterSize(40);
-        timeText.setFillColor(sf::Color::White);
-        timeText.setPosition(320 - timeText.getLocalBounds().width / 2, 440);
-
-
-        sf::Text* currentSelection = &text; // Pointer to the currently selected text
+        sf::Text exitText;
+        exitText.setFont(font);
+        exitText.setString("Press Enter to Exit");
+        exitText.setCharacterSize(20);
+        exitText.setFillColor(sf::Color::Yellow);
+        exitText.setPosition(320 - exitText.getLocalBounds().width / 2, 440);
 
         while (window.isOpen())
         {
@@ -794,45 +792,19 @@ public:
             if (delay.getElapsedTime().asMilliseconds() > 100)
             {
                 delay.restart();
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
                 {
-                    if (currentSelection == &text)
-                    {
-                        currentSelection = &timeText;
-                        text.setFillColor(sf::Color::White);
-                        timeText.setFillColor(sf::Color::Yellow);
-                    }
-                }
-                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-                {
-                    if (currentSelection == &timeText)
-                    {
-                        currentSelection = &text;
-                        timeText.setFillColor(sf::Color::White);
-                        text.setFillColor(sf::Color::Yellow);
-                    }
+                    return 0; // Exit the game
                 }
             }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-            {
-                if (currentSelection == &text)
-                {
-                    return 1;
-                }
-                else if (currentSelection == &timeText)
-                {
-                    return 0;
-                }
-            }
-
 
             window.clear(); // Clear the previous frame
             window.draw(menu_s); // Draw background
-            window.draw(text);
-            window.draw(timeText);
+            window.draw(exitText); // Draw exit text
             window.display();
         }
+        return 0; // In case the loop ends
     }
+
 
 };
